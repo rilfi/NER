@@ -30,10 +30,28 @@ public class SampleBolt extends BaseBasicBolt {
 		public void execute(Tuple input, BasicOutputCollector collector) {
 		// fetched the field "site" from input tuple.
 		String test = input.getStringByField("site");
+			File file = new File("file.txt");
+			if (!file.exists()) {
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			FileWriter fileWritter = null;
 			try {
-				writer.write(test);
-				writer.newLine();
-				writer.flush();
+				fileWritter = new FileWriter(file.getName(),true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+			try {
+				bufferWritter.write(test+"  --  hgfhtdfgdsews");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				bufferWritter.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -44,11 +62,5 @@ public class SampleBolt extends BaseBasicBolt {
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 	}
-	public void cleanup() {
-		try {
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+
 }
