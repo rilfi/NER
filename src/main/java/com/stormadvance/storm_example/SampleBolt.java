@@ -46,7 +46,8 @@ public class SampleBolt extends BaseBasicBolt {
 			}
 			BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
 			try {
-				bufferWritter.write(test+"  --  hgfhtdfgdsews");
+				bufferWritter.write(test);
+				bufferWritter.newLine();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
