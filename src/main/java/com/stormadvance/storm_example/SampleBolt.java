@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class SampleBolt extends BaseBasicBolt {
 	private static final long serialVersionUID = 1L;
-	File myfile = new File("fl.txt");
+	File myfile = new File("/fl.txt");
 	FileWriter writer ;
 	public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
 		try {
