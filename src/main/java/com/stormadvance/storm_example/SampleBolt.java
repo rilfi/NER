@@ -30,7 +30,7 @@ public class SampleBolt extends BaseBasicBolt {
 		public void execute(Tuple input, BasicOutputCollector collector) {
 		// fetched the field "site" from input tuple.
 		String test = input.getStringByField("site");
-			File file = new File("file.txt");
+			File file = new File("/root/file.txt");
 			if (!file.exists()) {
 				try {
 					file.createNewFile();
