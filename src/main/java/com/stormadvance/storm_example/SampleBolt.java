@@ -7,6 +7,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.tuple.Tuple;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,11 +15,10 @@ import java.util.Map;
 
 public class SampleBolt extends BaseBasicBolt {
 	private static final long serialVersionUID = 1L;
-	File myfile = new File("/root/fl.txt");
-	FileWriter writer ;
+	BufferedWriter writer ;
 	public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
 		try {
-			writer = new FileWriter(myfile, true);
+			writer = new BufferedWriter(new FileWriter("f1.txt"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -31,15 +31,24 @@ public class SampleBolt extends BaseBasicBolt {
 		// fetched the field "site" from input tuple.
 		String test = input.getStringByField("site");
 			try {
-				writer.write("Tomorrow will be cloudy.");
+				writer.write(test);
+				writer.newLine();
+				writer.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 			// print the value of field "site" on console.
-		System.out.println("######### Name of input site is : " + test);
+		//System.out.println("######### Name of input site is : " + test);
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+	}
+	public void cleanup() {
+		try {
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

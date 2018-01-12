@@ -18,7 +18,7 @@ public class SampleStormClusterTopology {
 		builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
 				"SampleSpout");
 		Config conf = new Config();
-		conf.setNumWorkers(3);
+		conf.setNumWorkers(2);
 		// This statement submit the topology on remote
 		// args[0] = name of topology
 		try {
