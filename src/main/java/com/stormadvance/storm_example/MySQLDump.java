@@ -1,9 +1,6 @@
 package com.stormadvance.storm_example;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import org.apache.storm.tuple.Tuple;
 /**
@@ -27,22 +24,36 @@ public class MySQLDump {
 	 * Password of MySQL server
 	 */
 	private String password;
+	Connection conn;
+	private Statement stmt;
 	
 	public MySQLDump(String ip, String database, String user, String password) {
+		final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+
 		this.ip = ip;
 		this.database = database;
 		this.user = user;
 		this.password = password;
+		final String DB_URL = "jdbc:mysql://inoovalab.com/inoovala_storm_test";
+		try {
+			conn = conn = DriverManager.getConnection(DB_URL, user, password);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * Get the MySQL connection
 	 */
-	private Connection connect = MySQLConnection.getMySQLConnection(ip,database,user,password);
 
 	private PreparedStatement preparedStatement = null;
-	Statement stmt = null;
-	
+
 	/**
 	 * Persist input tuple.
 	 * @param tuple
@@ -51,11 +62,7 @@ public class MySQLDump {
 
 
 			// preparedStatements can use variables and are more efficient
-		try {
-			stmt = connect.createStatement();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
 		//preparedStatement = connect.prepareStatement("insert into  apachelog values (?)");
 
 			//preparedStatement.setString(1, tuple.getStringByField("site"));
@@ -70,24 +77,13 @@ public class MySQLDump {
 			e.printStackTrace();
 		}
 
-		finally {
-			// close prepared statement
-			if (stmt != null) {
 
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-
-			}
-		}
 
 	}
 	
 	public void close() {
 		try {
-		connect.close();
+		conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
