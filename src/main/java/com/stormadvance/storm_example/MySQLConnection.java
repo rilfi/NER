@@ -33,11 +33,10 @@ public class MySQLConnection {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		final String DB_URL = "jdbc:mysql://"+ip+"/"+database;
 		// setup the connection with the DB.
 		try {
-			connect = DriverManager
-					.getConnection("jdbc:mysql://"+ip+"/"+database+"?"
-							+ "user="+user+"&password="+password+"");
+			connect =DriverManager.getConnection(DB_URL, user, password);;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

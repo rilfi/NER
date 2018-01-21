@@ -48,11 +48,15 @@ public class MySQLDump {
 	 * @param tuple
 	 */
 	public void persistRecord(Tuple tuple) {
-		try {
+
 
 			// preparedStatements can use variables and are more efficient
+		try {
 			stmt = connect.createStatement();
-			//preparedStatement = connect.prepareStatement("insert into  apachelog values (?)");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		//preparedStatement = connect.prepareStatement("insert into  apachelog values (?)");
 
 			//preparedStatement.setString(1, tuple.getStringByField("site"));
 
@@ -60,16 +64,18 @@ public class MySQLDump {
 			// Insert record
 			String sql = "INSERT INTO Registration " +
 					"VALUES (100, 'Zara', 'Ali', 18)";
+		try {
 			stmt.executeUpdate(sql);
-
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		}
+
+		finally {
 			// close prepared statement
-			if (preparedStatement != null) {
+			if (stmt != null) {
 
 				try {
-					preparedStatement.close();
+					stmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
