@@ -36,6 +36,12 @@ public class MySQLDump {
 		this.password = password;
 		final String DB_URL = "jdbc:mysql://inoovalab.com/inoovala_storm_test";
 		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+
 			conn = conn = DriverManager.getConnection(DB_URL, user, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
