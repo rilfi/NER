@@ -42,7 +42,9 @@ public class MySQLDump {
 		}
 		try {
 
-			conn = conn = DriverManager.getConnection(DB_URL, user, password);
+			conn = conn = DriverManager
+					.getConnection("jdbc:mysql://"+ip+"/"+database+"?"
+							+ "user="+user+"&password="+password+"");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
