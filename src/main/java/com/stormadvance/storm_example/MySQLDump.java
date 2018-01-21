@@ -2,6 +2,7 @@ package com.stormadvance.storm_example;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import org.apache.storm.tuple.Tuple;
 /**
@@ -57,18 +58,18 @@ public class MySQLDump {
 			// Insert record
 			preparedStatement.executeUpdate();
 
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Error occure while persisting records in mysql : ");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			// close prepared statement
 			if (preparedStatement != null) {
+
 				try {
 					preparedStatement.close();
-				} catch (Exception exception) {
-					System.out
-							.println("Error occure while closing PreparedStatement : ");
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
+
 			}
 		}
 
@@ -77,8 +78,8 @@ public class MySQLDump {
 	public void close() {
 		try {
 		connect.close();
-		}catch(Exception exception) {
-			System.out.println("Error occure while clossing the connection");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	
