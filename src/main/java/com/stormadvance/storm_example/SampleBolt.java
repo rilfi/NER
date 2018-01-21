@@ -8,8 +8,6 @@ import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /*import java.io.BufferedWriter;
@@ -21,8 +19,7 @@ import java.util.logging.Logger;*/
 
 public class SampleBolt extends BaseBasicBolt {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SampleBolt.class);
+
 	//BufferedWriter writer ;
 	/*public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
 		try {
@@ -67,7 +64,7 @@ public class SampleBolt extends BaseBasicBolt {
 
 			// print the value of field "site" on console.
 			collector.emit(new Values(test));
-		LOGGER.debug("######### Name of input site is : ",test);
+		//LOGGER.debug("######### Name of input site is : ",test);
 		//System.out.println("######### Name of input site is : " + test);
 	}
 
