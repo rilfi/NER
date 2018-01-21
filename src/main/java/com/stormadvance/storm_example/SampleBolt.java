@@ -6,16 +6,22 @@ import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.tuple.Tuple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
+
+/*import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Logger;*/
 
 public class SampleBolt extends BaseBasicBolt {
 	private static final long serialVersionUID = 1L;
-	BufferedWriter writer ;
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(SampleBolt.class);
+	//BufferedWriter writer ;
 	/*public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
 		try {
 			writer = new BufferedWriter(new FileWriter("f1.txt"));
@@ -58,7 +64,8 @@ public class SampleBolt extends BaseBasicBolt {
 			}*/
 
 			// print the value of field "site" on console.
-		System.out.println("######### Name of input site is : " + test);
+		LOGGER.debug("######### Name of input site is : ",test);
+		//System.out.println("######### Name of input site is : " + test);
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
