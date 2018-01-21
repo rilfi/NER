@@ -3,6 +3,7 @@ package com.stormadvance.storm_example;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.storm.tuple.Tuple;
 /**
@@ -40,6 +41,7 @@ public class MySQLDump {
 	private Connection connect = MySQLConnection.getMySQLConnection(ip,database,user,password);
 
 	private PreparedStatement preparedStatement = null;
+	Statement stmt = null;
 	
 	/**
 	 * Persist input tuple.
@@ -49,14 +51,16 @@ public class MySQLDump {
 		try {
 
 			// preparedStatements can use variables and are more efficient
-			preparedStatement = connect
-					.prepareStatement("insert into  apachelog values (?)");
+			stmt = connect.createStatement();
+			//preparedStatement = connect.prepareStatement("insert into  apachelog values (?)");
 
-			preparedStatement.setString(1, tuple.getStringByField("site"));
+			//preparedStatement.setString(1, tuple.getStringByField("site"));
 
 			
 			// Insert record
-			preparedStatement.executeUpdate();
+			String sql = "INSERT INTO Registration " +
+					"VALUES (100, 'Zara', 'Ali', 18)";
+			stmt.executeUpdate(sql);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
