@@ -10,14 +10,27 @@ public class MySQLConnection {
 
 	private static Connection connect = null;
 
-
-	public static Connection getMySQLConnection() {
+	/**
+	 * This method return the MySQL connection.
+	 *
+	 * @param ip
+	 *            ip of MySQL server
+	 * @param database
+	 *            name of database
+	 * @param user
+	 *            name of user
+	 * @param password
+	 *            password of given user
+	 * @return MySQL connection
+	 */
+	public static Connection getMySQLConnection(String ip, String database, String user, String password) {
 		try {
 			// this will load the MySQL driver, each DB has its own driver
 			Class.forName("com.mysql.jdbc.Driver");
 			// setup the connection with the DB.
 			connect = DriverManager
-					.getConnection("jdbc:mysql://inoovalab.com/inoovala_storm_test?user=inoovala_storm&password=Storm_Test");
+					.getConnection("jdbc:mysql://"+ip+"/"+database+"?"
+							+ "user="+user+"&password="+password+"");
 			return connect;
 		} catch (Exception e) {
 			throw new RuntimeException("Error occure while get mysql connection : ");

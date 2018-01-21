@@ -12,31 +12,31 @@ public class MySQLDump {
 	/**
 	 * Name of database you want to connect
 	 */
-/*	private String database;
-	*//**
+	private String database;
+	/**
 	 * Name of MySQL user
-	 *//*
+	 */
 	private String user;
-	*//**
+	/**
 	 * IP of MySQL server
-	 *//*
+	 */
 	private String ip;
-	*//**
+	/**
 	 * Password of MySQL server
-	 *//*
-	private String password;*/
+	 */
+	private String password;
 	
-	/*public MySQLDump(String ip, String database, String user, String password) {
+	public MySQLDump(String ip, String database, String user, String password) {
 		this.ip = ip;
 		this.database = database;
 		this.user = user;
 		this.password = password;
-	}*/
+	}
 	
 	/**
 	 * Get the MySQL connection
 	 */
-	private Connection connect = MySQLConnection.getMySQLConnection();
+	private Connection connect = MySQLConnection.getMySQLConnection(ip,database,user,password);
 
 	private PreparedStatement preparedStatement = null;
 	

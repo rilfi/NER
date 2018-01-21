@@ -17,14 +17,14 @@ public class SampleStormClusterTopology {
 		// set the bolt class
 		builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
 				"SampleSpout");
-		builder.setBolt("PersistenceBolt", new PersistenceBolt(), 1).shuffleGrouping(
+		builder.setBolt("PersistenceBolt", new PersistenceBolt(args[0], args[1], args[2], args[3]), 1).shuffleGrouping(
 				"SampleBolt");
 		Config conf = new Config();
-		conf.setNumWorkers(2);
+		conf.setNumWorkers(4);
 		// This statement submit the topology on remote
 		// args[0] = name of topology
 		try {
-			StormSubmitter.submitTopology(args[0], conf,
+			StormSubmitter.submitTopology(args[4], conf,
 					builder.createTopology());
 		} catch (AlreadyAliveException alreadyAliveException) {
 			System.out.println(alreadyAliveException);
