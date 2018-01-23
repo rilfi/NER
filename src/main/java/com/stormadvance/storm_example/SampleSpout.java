@@ -32,7 +32,7 @@ public class SampleSpout extends BaseRichSpout {
 
 	public void nextTuple() {
 
-		spoutOutputCollector.emit(new Values(map.get("Bling Shiny 3D Red Black Pink BOW Leopard Key Case Cover For Apple iPhone iPod Touch Samsung Galaxy Smart Mobile Phones (Black Bow, iPod Touch 4 4G 4th Gen)".toLowerCase())));
+		spoutOutputCollector.emit(new Values("Bling Shiny 3D Red Black Pink BOW Leopard Key Case Cover For Apple iPhone iPod Touch Samsung Galaxy Smart Mobile Phones (Black Bow, iPod Touch 4 4G 4th Gen)".toLowerCase()));
 		try{
 		Thread.sleep(5000);
 		}catch(Exception e) {
