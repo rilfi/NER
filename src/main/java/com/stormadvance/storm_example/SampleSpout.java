@@ -31,12 +31,8 @@ public class SampleSpout extends BaseRichSpout {
 	}
 
 	public void nextTuple() {
-		// Storm cluster repeatedly calls this method to emita continuous
-		// stream of tuples.
-		final Random rand = new Random();
-		// generate the random number from 0 to 4.
-		int randomNumber = rand.nextInt(5);
-		spoutOutputCollector.emit(new Values(map.get(randomNumber)));
+
+		spoutOutputCollector.emit(new Values(map.get("Bling Shiny 3D Red Black Pink BOW Leopard Key Case Cover For Apple iPhone iPod Touch Samsung Galaxy Smart Mobile Phones (Black Bow, iPod Touch 4 4G 4th Gen)".toLowerCase())));
 		try{
 		Thread.sleep(5000);
 		}catch(Exception e) {
@@ -47,6 +43,6 @@ public class SampleSpout extends BaseRichSpout {
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 
 		// emit the tuple with field "site"
-		declarer.declare(new Fields("site"));
+		declarer.declare(new Fields("row"));
 	}
 }

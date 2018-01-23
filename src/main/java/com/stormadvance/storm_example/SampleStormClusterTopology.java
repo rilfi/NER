@@ -25,7 +25,7 @@ public class SampleStormClusterTopology {
 		// This statement submit the topology on remote
 		// args[0] = name of topology
 		try {
-			StormSubmitter.submitTopology(args[4], conf,
+			StormSubmitter.submitTopology(args[0], conf,
 					builder.createTopology());
 		} catch (AlreadyAliveException alreadyAliveException) {
 			System.out.println(alreadyAliveException);
