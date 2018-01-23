@@ -14,11 +14,12 @@ public class SampleStormClusterTopology {
 		TopologyBuilder builder = new TopologyBuilder();
 		// set the spout class
 		builder.setSpout("SampleSpout", new SampleSpout(), 2);
+		builder.setBolt("CRFBolt",new CRFBolt("/root/both_crf6.model"),4).shuffleGrouping("SampleSpout");
 		// set the bolt class
-		builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
-				"SampleSpout");
-		builder.setBolt("PersistenceBolt", new PersistenceBolt(args[0], args[1], args[2], args[3]), 1).shuffleGrouping(
-				"SampleBolt");
+		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
+				"SampleSpout");*/
+		/*builder.setBolt("PersistenceBolt", new PersistenceBolt(args[0], args[1], args[2], args[3]), 1).shuffleGrouping(
+				"SampleBolt");*/
 		Config conf = new Config();
 		conf.setNumWorkers(4);
 		// This statement submit the topology on remote

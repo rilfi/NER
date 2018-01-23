@@ -36,7 +36,9 @@ public class MySQLConnection {
 		final String DB_URL = "jdbc:mysql://"+ip+"/"+database;
 		// setup the connection with the DB.
 		try {
-			connect =DriverManager.getConnection(DB_URL, user, password);;
+			connect =DriverManager
+					.getConnection("jdbc:mysql://"+ip+"/"+database+"?"
+							+ "user="+user+"&password="+password+"");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
