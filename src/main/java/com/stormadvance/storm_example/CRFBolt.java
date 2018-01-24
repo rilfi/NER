@@ -58,7 +58,7 @@ public class CRFBolt extends BaseBasicBolt {
 		public void execute(Tuple input, BasicOutputCollector collector) {
 
 			String row=input.getStringByField("row");
-			Chunking chunking = crfChunker.chunk(row);
+			/*Chunking chunking = crfChunker.chunk(row);
 			Set<String> brandSet=new HashSet<String>();
 			Set<String>catSet=new HashSet<String>();
 			Map<String,Set<String>> returnMap=new HashMap<String, Set<String>>();
@@ -70,27 +70,28 @@ public class CRFBolt extends BaseBasicBolt {
 				if(type.equals("brand")){
 					brandSet.add(chuntText.toLowerCase());
 				}
-				else if(type.equals("CAT")){
+				else if(type.equals("category")){
 					catSet.add(chuntText.toLowerCase());
 				}
 			}
 			if(brandSet.size()>0){
-				returnMap.put("BND",brandSet);
+				returnMap.put("brand",brandSet);
 
 			}
 			if (catSet.size()>0){
-				returnMap.put("category",catSet);
+				returnMap.put("product",catSet);
 			}
 			if(returnMap.size()>0){
 				collector.emit( new Values(row,returnMap));
-			}
+			}*/
+			collector.emit( new Values("----"+row+"-----"));
 
 
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 
-		declarer.declare(new Fields("row","ner"));
+		declarer.declare(new Fields("row"));
 	}
 
 }
