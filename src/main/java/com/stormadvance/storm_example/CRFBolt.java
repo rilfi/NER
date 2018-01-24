@@ -58,32 +58,36 @@ public class CRFBolt extends BaseBasicBolt {
 		public void execute(Tuple input, BasicOutputCollector collector) {
 
 			String row=input.getStringByField("row");
-			Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
-			Set<String> brandSet=new HashSet<String>();
-			Set<String>catSet=new HashSet<String>();
-			Map<String,Set<String>> returnMap=new HashMap<String, Set<String>>();
-			for(Chunk el:chunking.chunkSet()){
-				int start=el.start();
-				int end=el.end();
-				String chuntText= (String) chunking.charSequence().subSequence(start,end);
-				String type=el.type();
-				if(type.equals("brand")){
-					brandSet.add(chuntText.toLowerCase());
+			try {
+				Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
+				Set<String> brandSet = new HashSet<String>();
+				Set<String> catSet = new HashSet<String>();
+				Map<String, Set<String>> returnMap = new HashMap<String, Set<String>>();
+				for (Chunk el : chunking.chunkSet()) {
+					int start = el.start();
+					int end = el.end();
+					String chuntText = (String) chunking.charSequence().subSequence(start, end);
+					String type = el.type();
+					if (type.equals("brand")) {
+						brandSet.add(chuntText.toLowerCase());
+					} else if (type.equals("category")) {
+						catSet.add(chuntText.toLowerCase());
+					}
 				}
-				else if(type.equals("category")){
-					catSet.add(chuntText.toLowerCase());
-				}
-			}
-			if(brandSet.size()>0){
-				returnMap.put("brand",brandSet);
+				if (brandSet.size() > 0) {
+					returnMap.put("brand", brandSet);
 
+				}
+				if (catSet.size() > 0) {
+					returnMap.put("product", catSet);
+				}
+				if (returnMap.size() > 0) {
+					System.out.println(returnMap.keySet());
+					//collector.emit( new Values(row,returnMap));
+				}
 			}
-			if (catSet.size()>0){
-				returnMap.put("product",catSet);
-			}
-			if(returnMap.size()>0){
-				System.out.println(returnMap.keySet());
-				//collector.emit( new Values(row,returnMap));
+			catch (Exception e){
+				e.printStackTrace();
 			}
 			//collector.emit( new Values("----"+row+"-----"));
 
