@@ -60,9 +60,9 @@ public class CRFBolt extends BaseBasicBolt {
 			String row=input.getStringByField("row");
 			try {
 				Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
-				Set<String> brandSet = new HashSet<String>();
+				/*Set<String> brandSet = new HashSet<String>();
 				Set<String> catSet = new HashSet<String>();
-				Map<String, Set<String>> returnMap = new HashMap<String, Set<String>>();
+				Map<String, Set<String>> returnMap = new HashMap<String, Set<String>>();*/
 				/*for (Chunk el : chunking.chunkSet()) {
 					int start = el.start();
 					int end = el.end();
