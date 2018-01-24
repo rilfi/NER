@@ -44,6 +44,7 @@ public class CRFBolt extends BaseBasicBolt {
 		modelFile = new File(path);
 		try {
 			crfChunker= (ChainCrfChunker) AbstractExternalizable.readObject(modelFile);
+			System.out.println("###########  "+modelFile.exists());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -58,8 +59,8 @@ public class CRFBolt extends BaseBasicBolt {
 		public void execute(Tuple input, BasicOutputCollector collector) {
 
 			String row=input.getStringByField("row");
-			try {
-				Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
+
+				//Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
 				/*Set<String> brandSet = new HashSet<String>();
 				Set<String> catSet = new HashSet<String>();
 				Map<String, Set<String>> returnMap = new HashMap<String, Set<String>>();*/
@@ -85,10 +86,7 @@ public class CRFBolt extends BaseBasicBolt {
 					System.out.println(returnMap.keySet());
 					//collector.emit( new Values(row,returnMap));
 				}*/
-			}
-			catch (Exception e){
-				e.printStackTrace();
-			}
+
 			//collector.emit( new Values("----"+row+"-----"));
 
 
