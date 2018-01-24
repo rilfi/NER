@@ -13,9 +13,11 @@ public class SampleStormTopology {
 		TopologyBuilder builder = new TopologyBuilder();
 		// set the spout class
 		builder.setSpout("SampleSpout", new SampleSpout(), 2);
+		builder.setBolt("CRFBolt",new CRFBolt("/root/both_crf6.model"),4).shuffleGrouping("SampleSpout");
+
 		// set the bolt class
-		builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
-				"SampleSpout");
+		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
+				"SampleSpout");*/
 		Config conf = new Config();
 		conf.setDebug(true);
 		// create an instance of LocalCluster class for

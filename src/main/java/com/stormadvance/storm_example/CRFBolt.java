@@ -62,7 +62,7 @@ public class CRFBolt extends BaseBasicBolt {
 			Set<String> brandSet=new HashSet<String>();
 			Set<String>catSet=new HashSet<String>();
 			Map<String,Set<String>> returnMap=new HashMap<String, Set<String>>();
-			/*for(Chunk el:chunking.chunkSet()){
+			for(Chunk el:chunking.chunkSet()){
 				int start=el.start();
 				int end=el.end();
 				String chuntText= (String) chunking.charSequence().subSequence(start,end);
@@ -82,8 +82,9 @@ public class CRFBolt extends BaseBasicBolt {
 				returnMap.put("product",catSet);
 			}
 			if(returnMap.size()>0){
-				collector.emit( new Values(row,returnMap));
-			}*/
+				System.out.println(returnMap.keySet());
+				//collector.emit( new Values(row,returnMap));
+			}
 			//collector.emit( new Values("----"+row+"-----"));
 
 
