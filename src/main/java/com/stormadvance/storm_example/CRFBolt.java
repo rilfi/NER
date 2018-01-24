@@ -59,6 +59,7 @@ public class CRFBolt extends BaseBasicBolt {
 		public void execute(Tuple input, BasicOutputCollector collector) {
 
 			String row=input.getStringByField("row");
+			System.out.println("###########  "+modelFile.exists());
 
 				//Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
 				/*Set<String> brandSet = new HashSet<String>();
