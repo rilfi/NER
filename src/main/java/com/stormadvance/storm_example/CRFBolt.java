@@ -59,7 +59,17 @@ public class CRFBolt extends BaseBasicBolt {
 		public void execute(Tuple input, BasicOutputCollector collector) {
 
 			String row=input.getStringByField("row");
-			System.out.println("###########  "+modelFile.exists());
+			//System.out.println("###########  "+modelFile.exists());
+			File folder = new File("/root/");
+			File[] listOfFiles = folder.listFiles();
+
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					System.out.println("File " + listOfFiles[i].getName());
+				} else if (listOfFiles[i].isDirectory()) {
+					System.out.println("Directory " + listOfFiles[i].getName());
+				}
+			}
 
 				//Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
 				/*Set<String> brandSet = new HashSet<String>();
