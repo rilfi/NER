@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.aliasi.chunk.Chunking;
 import com.aliasi.crf.ChainCrfChunker;
+import com.aliasi.util.AbstractExternalizable;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -45,7 +47,14 @@ public final class SentimentBolt extends BaseRichBolt {
 		// and stores the key, value pairs to a Map.
 
 			modelFile = new File(path);
-			 //br = new BufferedReader(new FileReader(path));
+		try {
+			crfChunker= (ChainCrfChunker) AbstractExternalizable.readObject(modelFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		//br = new BufferedReader(new FileReader(path));
 
 
 
@@ -57,10 +66,12 @@ public final class SentimentBolt extends BaseRichBolt {
 	}
 
 	public final void execute(final Tuple input) {
+		String row=input.getStringByField("row");
 
 
 
-		System.out.println(modelFile.lastModified());
+		Chunking chunking = crfChunker.chunk(row);
+		System.out.println(chunking.chunkSet().size());
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
 				afinnSentimentMap.put(tabSplit[0],
