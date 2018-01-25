@@ -69,7 +69,7 @@ public final class SentimentBolt extends BaseRichBolt {
 
 		final String tweet = (String) input.getValueByField("row");
 		//final int sentimentCurrentTweet = getSentimentOfTweet(tweet);
-		collector.emit(new Values(tweet,afinnSentimentMap.size()));
+		collector.emit(new Values("---"+tweet,afinnSentimentMap.size()));
 
 	}
 
