@@ -46,9 +46,10 @@ public final class SentimentBolt extends BaseRichBolt {
 			BufferedReader br = new BufferedReader(new FileReader(path));
 			String line;
 			while ((line = br.readLine()) != null) {
-				String[] tabSplit = line.split(",");
+				/*String[] tabSplit = line.split(",");
 				afinnSentimentMap.put(tabSplit[0],
-						Integer.parseInt(tabSplit[1]));
+						Integer.parseInt(tabSplit[1]));*/
+				System.out.println(line);
 			}
 			br.close();
 
@@ -67,9 +68,9 @@ public final class SentimentBolt extends BaseRichBolt {
 
 	public final void execute(final Tuple input) {
 
-		final String tweet = (String) input.getValueByField("row");
+		//final String tweet = (String) input.getValueByField("row");
 		//final int sentimentCurrentTweet = getSentimentOfTweet(tweet);
-		collector.emit(new Values("---"+tweet,afinnSentimentMap.size()));
+		//collector.emit(new Values("---"+tweet,afinnSentimentMap.size()));
 
 	}
 
