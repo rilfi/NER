@@ -5,8 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import com.aliasi.chunk.Chunk;
 import com.aliasi.chunk.Chunking;
 import com.aliasi.crf.ChainCrfChunker;
 import com.aliasi.util.AbstractExternalizable;
@@ -16,7 +19,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
-
+import org.apache.storm.tuple.Values;
 
 
 /**
@@ -71,7 +74,31 @@ public final class SentimentBolt extends BaseRichBolt {
 
 
 		Chunking chunking = crfChunker.chunk(row);
-		System.out.println(chunking.chunkSet().size());
+		Set<String> brandSet = new HashSet<String>();
+		Set<String> catSet = new HashSet<String>();
+		Map<String, Set<String>> returnMap = new HashMap<String, Set<String>>();
+		for (Chunk el : chunking.chunkSet()) {
+			int start = el.start();
+			int end = el.end();
+			String chuntText = (String) chunking.charSequence().subSequence(start, end);
+			String type = el.type();
+			if (type.equals("brand")) {
+				brandSet.add(chuntText.toLowerCase());
+			} else if (type.equals("category")) {
+				catSet.add(chuntText.toLowerCase());
+			}
+		}
+		if (brandSet.size() > 0) {
+			returnMap.put("brand", brandSet);
+
+		}
+		if (catSet.size() > 0) {
+			returnMap.put("product", catSet);
+		}
+		if (returnMap.size() > 0) {
+			System.out.println(returnMap.keySet());
+			//collector.emit( new Values(row,returnMap));
+		}
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
 				afinnSentimentMap.put(tabSplit[0],
