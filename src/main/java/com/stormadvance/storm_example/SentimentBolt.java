@@ -1,11 +1,13 @@
 package com.stormadvance.storm_example;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.aliasi.crf.ChainCrfChunker;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -27,7 +29,9 @@ public final class SentimentBolt extends BaseRichBolt {
 	private static final long serialVersionUID = -5094673458112825122L;
 	private OutputCollector collector;
 	private String path;
-	BufferedReader br;
+	//BufferedReader br;
+	File modelFile ;
+	ChainCrfChunker crfChunker;
 	public SentimentBolt(String path) {
 		this.path = path;
 	}
@@ -39,38 +43,34 @@ public final class SentimentBolt extends BaseRichBolt {
 		this.collector = collector;
 		// Bolt will read the AFINN Sentiment file [which is in the classpath]
 		// and stores the key, value pairs to a Map.
-		try {
-			 br = new BufferedReader(new FileReader(path));
 
-		} catch (final IOException ioException) {
-			ioException.printStackTrace();
-			System.exit(1);
-		}
+			modelFile = new File(path);
+			 //br = new BufferedReader(new FileReader(path));
+
+
 
 	}
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields("tweet","sentiment"));
+		//outputFieldsDeclarer.declare(new Fields("tweet","sentiment"));
 	}
 
 	public final void execute(final Tuple input) {
-		try {
 
-			String line;
-			while ((line = br.readLine()) != null) {
-				/*String[] tabSplit = line.split(",");
+
+
+		System.out.println(modelFile.lastModified());
+			/*while ((line = br.readLine()) != null) {
+				*//*String[] tabSplit = line.split(",");
 				afinnSentimentMap.put(tabSplit[0],
-						Integer.parseInt(tabSplit[1]));*/
+						Integer.parseInt(tabSplit[1]));*//*
 				System.out.println(line);
 				break;
-			}
+			}*/
 
 
-		} catch (final IOException ioException) {
-			ioException.printStackTrace();
-			System.exit(1);
-		}
+
 
 		//final String tweet = (String) input.getValueByField("row");
 		//final int sentimentCurrentTweet = getSentimentOfTweet(tweet);
