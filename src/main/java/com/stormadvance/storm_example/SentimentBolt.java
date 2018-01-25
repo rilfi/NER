@@ -65,7 +65,7 @@ public final class SentimentBolt extends BaseRichBolt {
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		//outputFieldsDeclarer.declare(new Fields("tweet","sentiment"));
+		outputFieldsDeclarer.declare(new Fields("tweet","sentiment"));
 	}
 
 	public final void execute(final Tuple input) {
@@ -97,7 +97,7 @@ public final class SentimentBolt extends BaseRichBolt {
 		}
 		if (returnMap.size() > 0) {
 			System.out.println(returnMap.keySet());
-			//collector.emit( new Values(row,returnMap));
+			collector.emit( new Values(row,returnMap));
 		}
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
