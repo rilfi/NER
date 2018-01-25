@@ -63,6 +63,7 @@ public final class SentimentBolt extends BaseRichBolt {
 				afinnSentimentMap.put(tabSplit[0],
 						Integer.parseInt(tabSplit[1]));*/
 				System.out.println(line);
+				break;
 			}
 
 
