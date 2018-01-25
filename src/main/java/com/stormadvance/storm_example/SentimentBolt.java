@@ -12,9 +12,6 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
-import org.apache.storm.tuple.Values;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 
@@ -26,11 +23,11 @@ import org.slf4j.LoggerFactory;
  * @author - centos
  */
 public final class SentimentBolt extends BaseRichBolt {
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SentimentBolt.class);
+
 	private static final long serialVersionUID = -5094673458112825122L;
 	private OutputCollector collector;
 	private String path;
+	BufferedReader br;
 	public SentimentBolt(String path) {
 		this.path = path;
 	}
@@ -43,18 +40,9 @@ public final class SentimentBolt extends BaseRichBolt {
 		// Bolt will read the AFINN Sentiment file [which is in the classpath]
 		// and stores the key, value pairs to a Map.
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(path));
-			String line;
-			while ((line = br.readLine()) != null) {
-				/*String[] tabSplit = line.split(",");
-				afinnSentimentMap.put(tabSplit[0],
-						Integer.parseInt(tabSplit[1]));*/
-				System.out.println(line);
-			}
-			br.close();
+			 br = new BufferedReader(new FileReader(path));
 
 		} catch (final IOException ioException) {
-			LOGGER.error(ioException.getMessage(), ioException);
 			ioException.printStackTrace();
 			System.exit(1);
 		}
@@ -67,6 +55,21 @@ public final class SentimentBolt extends BaseRichBolt {
 	}
 
 	public final void execute(final Tuple input) {
+		try {
+
+			String line;
+			while ((line = br.readLine()) != null) {
+				/*String[] tabSplit = line.split(",");
+				afinnSentimentMap.put(tabSplit[0],
+						Integer.parseInt(tabSplit[1]));*/
+				System.out.println(line);
+			}
+
+
+		} catch (final IOException ioException) {
+			ioException.printStackTrace();
+			System.exit(1);
+		}
 
 		//final String tweet = (String) input.getValueByField("row");
 		//final int sentimentCurrentTweet = getSentimentOfTweet(tweet);
