@@ -15,26 +15,21 @@ import java.util.Set;
  */
 public class ProductNERTest {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-       File modelFile = new File("product_crf.model");
+       File modelFile = new File("both_crf6.model");
         ChainCrfChunker crfChunker = (ChainCrfChunker) AbstractExternalizable.readObject(modelFile);
-        /*Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
+        Chunking chunking = crfChunker.chunk("Bling Shiny 3D Red Black Pink BOW Leopard Key Case Cover For Apple iPhone iPod Touch Samsung Galaxy Smart Mobile Phones (Black Bow, iPod Touch 4 4G 4th Gen");
         Set<String> catSet=new HashSet<String>();
         for(Chunk el:chunking.chunkSet()){
             int start=el.start();
             int end=el.end();
             String chuntText= (String) chunking.charSequence().subSequence(start,end);
             String type=el.type();
-            *//*if(type.equals("category")){
+            if(type.equals("category")){
                 System.out.println(chuntText.toLowerCase());
-            }*//*
-           *//* else if(type.equals("CAT")){
+            }
+           /* else if(type.equals("CAT")){
                 catSet.add(chuntText.toLowerCase());
-            }*//*
-
-        }*/
-        for (int i = 1; i < args.length; ++i) {
-            Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
-            System.out.println("Chunking=" + chunking);
+            }*/
         }
 
 

@@ -36,20 +36,20 @@ public class CRFBolt extends BaseBasicBolt {
 	ChainCrfChunker crfChunker;
 	public CRFBolt(String path) {
 		this.path = path;
-	}
-	private Map<String, Integer> NERMap = new HashMap<String, Integer>();
-
-	public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-		this.collector = collector;
 		modelFile = new File(path);
 		try {
 			crfChunker= (ChainCrfChunker) AbstractExternalizable.readObject(modelFile);
-			System.out.println("###########  "+modelFile.exists());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	private Map<String, Integer> NERMap = new HashMap<String, Integer>();
+
+	public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
+		this.collector = collector;
+
 
 
 	}
@@ -59,15 +59,8 @@ public class CRFBolt extends BaseBasicBolt {
 		public void execute(Tuple input, BasicOutputCollector collector) {
 
 			String row=input.getStringByField("row");
-			modelFile = new File(path);
-			try {
-				crfChunker= (ChainCrfChunker) AbstractExternalizable.readObject(modelFile);
-				System.out.println("###########  "+modelFile.exists());
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+
+
 			//System.out.println("###########  "+modelFile.exists());
 			/*File folder = new File("/root/");
 			File[] listOfFiles = folder.listFiles();
@@ -80,11 +73,11 @@ public class CRFBolt extends BaseBasicBolt {
 				}
 			}*/
 
-				//Chunking chunking = crfChunker.chunk("hhgfd NUMARK 200FX Vocal Effects Mixer");
-				/*Set<String> brandSet = new HashSet<String>();
+				Chunking chunking = crfChunker.chunk(row);
+				Set<String> brandSet = new HashSet<String>();
 				Set<String> catSet = new HashSet<String>();
-				Map<String, Set<String>> returnMap = new HashMap<String, Set<String>>();*/
-				/*for (Chunk el : chunking.chunkSet()) {
+				Map<String, Set<String>> returnMap = new HashMap<String, Set<String>>();
+				for (Chunk el : chunking.chunkSet()) {
 					int start = el.start();
 					int end = el.end();
 					String chuntText = (String) chunking.charSequence().subSequence(start, end);
@@ -105,7 +98,7 @@ public class CRFBolt extends BaseBasicBolt {
 				if (returnMap.size() > 0) {
 					System.out.println(returnMap.keySet());
 					//collector.emit( new Values(row,returnMap));
-				}*/
+				}
 
 			//collector.emit( new Values("----"+row+"-----"));
 
