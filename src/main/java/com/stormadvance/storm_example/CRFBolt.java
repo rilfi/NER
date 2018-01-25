@@ -97,7 +97,7 @@ public class CRFBolt extends BaseBasicBolt {
 				}
 				if (returnMap.size() > 0) {
 					System.out.println(returnMap.keySet());
-					//collector.emit( new Values(row,returnMap));
+					collector.emit( new Values(row,returnMap));
 				}
 
 			//collector.emit( new Values("----"+row+"-----"));
@@ -107,7 +107,7 @@ public class CRFBolt extends BaseBasicBolt {
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 
-		//declarer.declare(new Fields("row","ner"));
+		declarer.declare(new Fields("row","ner"));
 	}
 
 }
