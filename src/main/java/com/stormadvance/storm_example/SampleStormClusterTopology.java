@@ -14,7 +14,8 @@ public class SampleStormClusterTopology {
 		TopologyBuilder builder = new TopologyBuilder();
 		// set the spout class
 		builder.setSpout("SampleSpout", new SampleSpout(), 2);
-		builder.setBolt("CRFBolt",new CRFBolt("/root/brand_crf.model"),2).shuffleGrouping("SampleSpout");
+		//builder.setBolt("CRFBolt",new CRFBolt("/root/brand_crf.model"),2).shuffleGrouping("SampleSpout");
+        builder.setBolt("CRFBolt",new SentimentBolt("/root/maplist.txt"),2).shuffleGrouping("SampleSpout");
 		// set the bolt class
 		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
 				"SampleSpout");*/
