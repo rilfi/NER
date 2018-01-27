@@ -46,7 +46,7 @@ public class TwitterSpout extends BaseRichSpout {
             if((line=br.readLine())!=null) {
                 spoutOutputCollector.emit(new Values(id, line.toLowerCase()));
                 try{
-                    Thread.sleep(5000);
+                    Thread.sleep(500);
                 }catch(Exception e) {
                     System.out.println("Failed to sleep the thread");
                 }
@@ -61,11 +61,7 @@ public class TwitterSpout extends BaseRichSpout {
         }
 
 		id++;
-		try{
-		Thread.sleep(5000);
-		}catch(Exception e) {
-			System.out.println("Failed to sleep the thread");
-		}
+
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
