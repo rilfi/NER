@@ -13,7 +13,7 @@ public class SampleStormClusterTopology {
 		// create an instance of TopologyBuilder class
 		TopologyBuilder builder = new TopologyBuilder();
 		// set the spout class
-		builder.setSpout("TwitterSpout", new TwitterSpout(), 2);
+		builder.setSpout("TwitterSpout", new TwitterSpout("/root/tweets100.txt"), 2);
 		//builder.setBolt("CRFBolt",new CRFBolt("/root/brand_crf.model"),2).shuffleGrouping("TwitterSpout");
         builder.setBolt("CRFBolt",new SentimentBolt("/root/brand_crf.model"),2).shuffleGrouping("TwitterSpout");
 		// set the bolt class

@@ -17,7 +17,7 @@ public class SampleStormTopology {
 		// create an instance of TopologyBuilder class
 		TopologyBuilder builder = new TopologyBuilder();
 		// set the spout class
-		builder.setSpout("TwitterSpout", new TwitterSpout("/root/tweets100.txt"), 2);
+		builder.setSpout("TwitterSpout", new TwitterSpout("/root/tweets100.txt"), 1);
 		builder.setBolt("brandNERBolt",new BrandNERBolt("/root/brand_crf.model"),4).shuffleGrouping("TwitterSpout");
 		builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),4).shuffleGrouping("TwitterSpout");
 
