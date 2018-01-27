@@ -89,6 +89,10 @@ public final class ProductNERBolt extends BaseRichBolt {
 		if (catSet.size() > 0) {
 			collector.emit( new Values(id,catSet));
 		}
+		else {
+			collector.emit( new Values(id,"---noProduct---"));
+
+		}
 
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
