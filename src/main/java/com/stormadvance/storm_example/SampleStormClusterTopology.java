@@ -13,12 +13,12 @@ public class SampleStormClusterTopology {
 		// create an instance of TopologyBuilder class
 		TopologyBuilder builder = new TopologyBuilder();
 		// set the spout class
-		builder.setSpout("SampleSpout", new SampleSpout(), 2);
-		//builder.setBolt("CRFBolt",new CRFBolt("/root/brand_crf.model"),2).shuffleGrouping("SampleSpout");
-        builder.setBolt("CRFBolt",new SentimentBolt("/root/brand_crf.model"),2).shuffleGrouping("SampleSpout");
+		builder.setSpout("TwitterSpout", new TwitterSpout(), 2);
+		//builder.setBolt("CRFBolt",new CRFBolt("/root/brand_crf.model"),2).shuffleGrouping("TwitterSpout");
+        builder.setBolt("CRFBolt",new SentimentBolt("/root/brand_crf.model"),2).shuffleGrouping("TwitterSpout");
 		// set the bolt class
 		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
-				"SampleSpout");*/
+				"TwitterSpout");*/
 		/*builder.setBolt("PersistenceBolt", new PersistenceBolt(args[0], args[1], args[2], args[3]), 1).shuffleGrouping(
 				"SampleBolt");*/
 		Config conf = new Config();

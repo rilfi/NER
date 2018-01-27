@@ -33,14 +33,7 @@ public final class ModelNERBolt extends BaseRichBolt {
 
 	private static final long serialVersionUID = -5094673458112825122L;
 	private OutputCollector collector;
-	private String path;
 	//BufferedReader br;
-	File modelFile ;
-	ChainCrfChunker crfChunker;
-	public ModelNERBolt(String path) {
-		this.path = path;
-	}
-	private Map<String, Integer> afinnSentimentMap = new HashMap<String, Integer>();
 
 	public final void prepare(final Map map,
 			final TopologyContext topologyContext,
@@ -49,14 +42,7 @@ public final class ModelNERBolt extends BaseRichBolt {
 		// Bolt will read the AFINN Sentiment file [which is in the classpath]
 		// and stores the key, value pairs to a Map.
 
-			modelFile = new File(path);
-		try {
-			crfChunker= (ChainCrfChunker) AbstractExternalizable.readObject(modelFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+
 		//br = new BufferedReader(new FileReader(path));
 
 
@@ -65,17 +51,17 @@ public final class ModelNERBolt extends BaseRichBolt {
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields("tweet","nermap"));
+		outputFieldsDeclarer.declare(new Fields("id","modelset"));
 	}
 
 	public final void execute(final Tuple input) {
 		String row=input.getStringByField("tweet");
+		int id=input.getIntegerByField("id");
 
 
 
 
 		Set<String> modelSet = new HashSet<String>();
-		Map<String, Set<String>> returnMap = (Map<String, Set<String>>) input.getValueByField("nermap");
 		for(String token:row.split(" ")){
 			if(isAlphanumeric(token)){
 				modelSet.add(token);
@@ -83,12 +69,9 @@ public final class ModelNERBolt extends BaseRichBolt {
 
 		}
 		if(modelSet.size()>0){
-			returnMap.put("model",modelSet);
+			collector.emit( new Values(id,modelSet));
 		}
-		if (returnMap.size() > 0) {
-			//System.out.println(returnMap.keySet());
-			collector.emit( new Values(row,returnMap));
-		}
+
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
 				afinnSentimentMap.put(tabSplit[0],

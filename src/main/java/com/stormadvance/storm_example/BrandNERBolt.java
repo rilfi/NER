@@ -64,17 +64,17 @@ public final class BrandNERBolt extends BaseRichBolt {
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields("tweet","nermap"));
+		outputFieldsDeclarer.declare(new Fields("id","brandset"));
 	}
 
 	public final void execute(final Tuple input) {
 		String row=input.getStringByField("tweet");
+		int id=input.getIntegerByField("id");
 
 
 
 		Chunking chunking = crfChunker.chunk(row);
 		Set<String> brandSet = new HashSet<String>();
-		Map<String, Set<String>> returnMap = (Map<String, Set<String>>) input.getValueByField("nermap");
 		for (Chunk el : chunking.chunkSet()) {
 			int start = el.start();
 			int end = el.end();
@@ -85,14 +85,11 @@ public final class BrandNERBolt extends BaseRichBolt {
 			}
 		}
 		if (brandSet.size() > 0) {
-			returnMap.put("brand", brandSet);
+			collector.emit( new Values(id,brandSet));
 
 		}
 
-		if (returnMap.size() > 0) {
-			System.out.println(returnMap.keySet());
-			collector.emit( new Values(row,returnMap));
-		}
+
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
 				afinnSentimentMap.put(tabSplit[0],

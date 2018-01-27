@@ -65,18 +65,17 @@ public final class ProductNERBolt extends BaseRichBolt {
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields("tweet","nermap"));
+		outputFieldsDeclarer.declare(new Fields("id","productset"));
 	}
 
 	public final void execute(final Tuple input) {
 		String row=input.getStringByField("tweet");
+		int id=input.getIntegerByField("id");
 
 
 
 		Chunking chunking = crfChunker.chunk(row);
 		Set<String> catSet = new HashSet<String>();
-		Map<String, Set<String>> returnMap = (Map<String, Set<String>>) input.getValueByField("nermap");
-
 		for (Chunk el : chunking.chunkSet()) {
 			int start = el.start();
 			int end = el.end();
@@ -88,12 +87,9 @@ public final class ProductNERBolt extends BaseRichBolt {
 		}
 
 		if (catSet.size() > 0) {
-			returnMap.put("product", catSet);
+			collector.emit( new Values(id,catSet));
 		}
-		if (returnMap.size() > 0) {
-			System.out.println(returnMap.keySet());
-			collector.emit( new Values(row,returnMap));
-		}
+
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
 				afinnSentimentMap.put(tabSplit[0],

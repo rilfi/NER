@@ -66,29 +66,26 @@ public final class GroupClassificationBolt extends BaseRichBolt {
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields("tweet","nermap"));
+		outputFieldsDeclarer.declare(new Fields("id","group"));
 	}
 
 	public final void execute(final Tuple input) {
-		String row=input.getStringByField("row");
+		String row=input.getStringByField("tweet");
+		int id=input.getIntegerByField("id");
 
 
 
 		Classification classification
 				= classifier.classify(row);
 		String group=classification.bestCategory();
-		Set<String>groupSet=new HashSet<String>();
-		Map<String, Set<String>> returnMap = (Map<String, Set<String>>) input.getValueByField("nermap");
-		groupSet.add(group);
-		if (groupSet.size() > 0) {
-			returnMap.put("state", groupSet);
+
+
+		if (!group.isEmpty()) {
+			collector.emit( new Values(id,group));
 
 		}
 
-		if (returnMap.size() > 0) {
-			System.out.println(returnMap.keySet());
-			collector.emit( new Values(row,returnMap));
-		}
+
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
 				afinnSentimentMap.put(tabSplit[0],

@@ -2,9 +2,14 @@ package com.stormadvance.storm_example;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
+import org.apache.storm.bolt.JoinBolt;
 import org.apache.storm.generated.AlreadyAliveException;
 import org.apache.storm.generated.InvalidTopologyException;
 import org.apache.storm.topology.TopologyBuilder;
+import org.apache.storm.topology.base.BaseWindowedBolt;
+import org.apache.storm.tuple.Fields;
+
+import java.util.concurrent.TimeUnit;
 
 public class SampleStormTopology {
 	public static void main(String[] args) throws AlreadyAliveException,
@@ -12,12 +17,23 @@ public class SampleStormTopology {
 		// create an instance of TopologyBuilder class
 		TopologyBuilder builder = new TopologyBuilder();
 		// set the spout class
-		builder.setSpout("SampleSpout", new SampleSpout(), 2);
-		builder.setBolt("CRFBolt",new SentimentBolt("/root/brand_crf.model"),4).shuffleGrouping("SampleSpout");
+		builder.setSpout("TwitterSpout", new TwitterSpout("/root/tweets100.txt"), 2);
+		builder.setBolt("brandNERBolt",new BrandNERBolt("/root/brand_crf.model"),4).shuffleGrouping("TwitterSpout");
+		builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),4).shuffleGrouping("TwitterSpout");
+
+
+		JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
+				.join("productNERBolt",    "id","brandNERBolt")
+				.select ("brandNERBolt:id,brandset,productset")
+				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
+		builder.setBolt("nerjoiner", nerJoiner)
+				.fieldsGrouping("brandNERBolt", new Fields("id"))
+				.fieldsGrouping("productNERBolt", new Fields("id"));
+		builder.setBolt("printer", new PrinterBolt() ).shuffleGrouping("nerjoiner");
 
 		// set the bolt class
 		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
-				"SampleSpout");*/
+				"TwitterSpout");*/
 		Config conf = new Config();
 		conf.setDebug(true);
 		// create an instance of LocalCluster class for
