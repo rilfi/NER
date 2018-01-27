@@ -23,6 +23,7 @@ public class SampleStormClusterTopology {
 				"SampleBolt");*/
 		Config conf = new Config();
 		conf.setNumWorkers(4);
+
 		// This statement submit the topology on remote
 		// args[0] = name of topology
 		try {
