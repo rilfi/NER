@@ -35,7 +35,7 @@ public class SampleStormTopology {
 
 		JoinBolt classifierJoiner = new JoinBolt("GroupClassificationBolt", "id")
 				.join("StateClassificationBolt",    "id","GroupClassificationBolt")
-				.select ("id,group,status")
+				.select ("GroupClassificationBolt:id,group,status")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("classifierJoiner", classifierJoiner)
 				.fieldsGrouping("GroupClassificationBolt", new Fields("id"))
