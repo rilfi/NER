@@ -57,7 +57,7 @@ public class SampleStormTopology {
 				.fieldsGrouping("IEJoiner", new Fields("id"))
 				.fieldsGrouping("TwitterSpout", new Fields("id"));*/
 
-		builder.setBolt("printer", new PrinterBolt() ).shuffleGrouping("IEJoiner");
+		//builder.setBolt("printer", new PrinterBolt() ).shuffleGrouping("IEJoiner");
 
 		// set the bolt class
 		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
