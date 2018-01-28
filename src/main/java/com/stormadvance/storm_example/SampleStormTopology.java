@@ -18,6 +18,7 @@ public class SampleStormTopology {
 		TopologyBuilder builder = new TopologyBuilder();
 		// set the spout class
 		builder.setSpout("TwitterSpout", new TwitterSpout("/root/ptweets.txt"), 1);
+		builder.setBolt("twitterBolt",new TwitterBolt(),1).shuffleGrouping("TwitterSpout");
 		builder.setBolt("brandNERBolt",new BrandNERBolt("/root/brand_crf.model"),4).shuffleGrouping("TwitterSpout");
 		builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),4).shuffleGrouping("TwitterSpout");
 		builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("/root/group.model.LogReg"),4).shuffleGrouping("TwitterSpout");
@@ -50,12 +51,12 @@ public class SampleStormTopology {
 				.fieldsGrouping("classifierJoiner", new Fields("id"));
 
 		JoinBolt fainalJoiner = new JoinBolt("IEJoiner", "id")
-				.join("TwitterSpout",    "id","IEJoiner")
+				.join("twitterBolt",    "id","IEJoiner")
 				.select ("id,brandset,productset,group,status,tweet")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("fainalJoiner", fainalJoiner)
 				.fieldsGrouping("IEJoiner", new Fields("id"))
-				.fieldsGrouping("TwitterSpout", new Fields("id"));
+				.fieldsGrouping("twitterBolt", new Fields("id"));
 
 		//builder.setBolt("printer", new PrinterBolt() ).shuffleGrouping("IEJoiner");
 
