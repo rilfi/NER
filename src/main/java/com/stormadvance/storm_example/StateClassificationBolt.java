@@ -66,29 +66,24 @@ public final class StateClassificationBolt extends BaseRichBolt {
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields("tweet","nermap"));
+		outputFieldsDeclarer.declare(new Fields("id","status"));
 	}
 
 	public final void execute(final Tuple input) {
-		String row=input.getStringByField("row");
+		String row=input.getStringByField("tweet");
+		int id=input.getIntegerByField("id");
 
 
 
 		Classification classification
 				= classifier.classify(row);
 		String state=classification.bestCategory();
-		Set<String>stateSet=new HashSet<String>();
-		Map<String, Set<String>> returnMap = (Map<String, Set<String>>) input.getValueByField("nermap");
-		stateSet.add(state);
-		if (stateSet.size() > 0) {
-			returnMap.put("state", stateSet);
+		if (!state.isEmpty()) {
+			collector.emit( new Values(id,state));
 
 		}
 
-		if (returnMap.size() > 0) {
-			System.out.println(returnMap.keySet());
-			collector.emit( new Values(row,returnMap));
-		}
+
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
 				afinnSentimentMap.put(tabSplit[0],

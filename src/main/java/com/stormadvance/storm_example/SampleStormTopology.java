@@ -20,15 +20,18 @@ public class SampleStormTopology {
 		builder.setSpout("TwitterSpout", new TwitterSpout("/root/ptweets.txt"), 1);
 		builder.setBolt("brandNERBolt",new BrandNERBolt("/root/brand_crf.model"),4).shuffleGrouping("TwitterSpout");
 		builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),4).shuffleGrouping("TwitterSpout");
+		builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("root/group.model.LogReg"),4).shuffleGrouping("TwitterSpout");
+		builder.setBolt("StateClassificationBolt",new GroupClassificationBolt("root/status.model.LogReg"),4).shuffleGrouping("TwitterSpout");
+
 
 
 		JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
-				.join("productNERBolt",    "id","brandNERBolt")
-				.select ("brandNERBolt:id,brandset,productset")
+				.join("productNERBolt",    "id","brandNERBolt").join("StateClassificationBolt","id","brandNERBolt")
+				.select ("brandNERBolt:id,brandset,productset,status")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("nerjoiner", nerJoiner)
 				.fieldsGrouping("brandNERBolt", new Fields("id"))
-				.fieldsGrouping("productNERBolt", new Fields("id"));
+				.fieldsGrouping("productNERBolt", new Fields("id")).fieldsGrouping("StateClassificationBolt",new Fields("id"));
 		builder.setBolt("printer", new PrinterBolt() ).shuffleGrouping("nerjoiner");
 
 		// set the bolt class
