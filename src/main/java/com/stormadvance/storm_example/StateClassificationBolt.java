@@ -78,7 +78,7 @@ public final class StateClassificationBolt extends BaseRichBolt {
 		Classification classification
 				= classifier.classify(row);
 		String state=classification.bestCategory();
-		if (!state.isEmpty()) {
+		if (state!=null) {
 			collector.emit( new Values(id,state));
 
 		}

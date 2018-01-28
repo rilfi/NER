@@ -81,7 +81,7 @@ public final class GroupClassificationBolt extends BaseRichBolt {
 
 
 
-		if (!group.isEmpty()) {
+		if (group!=null) {
 			collector.emit( new Values(id,group));
 
 		}
