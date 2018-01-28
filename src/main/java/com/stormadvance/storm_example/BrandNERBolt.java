@@ -88,9 +88,7 @@ public final class BrandNERBolt extends BaseRichBolt {
 			collector.emit( new Values(id,brandSet));
 
 		}
-		else {
-			collector.emit( new Values(id,"----nobrand----"));
-		}
+
 
 
 			/*while ((line = br.readLine()) != null) {
