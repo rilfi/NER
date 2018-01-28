@@ -33,23 +33,31 @@ public class SampleStormTopology {
 				.fieldsGrouping("brandNERBolt", new Fields("id"))
 				.fieldsGrouping("productNERBolt", new Fields("id"));
 
-		/*JoinBolt classifierJoiner = new JoinBolt("GroupClassificationBolt", "id")
+		JoinBolt classifierJoiner = new JoinBolt("GroupClassificationBolt", "id")
 				.join("StateClassificationBolt",    "id","GroupClassificationBolt")
-				.select ("GroupClassificationBolt:id,group,status")
+				.select ("id,group,status")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("classifierJoiner", classifierJoiner)
 				.fieldsGrouping("GroupClassificationBolt", new Fields("id"))
 				.fieldsGrouping("StateClassificationBolt", new Fields("id"));
 
 		JoinBolt IEJoiner = new JoinBolt("nerjoiner", "id")
-				.join("StateClassificationBolt",    "id","GroupClassificationBolt")
-				.select ("GroupClassificationBolt:id,group,status")
+				.join("classifierJoiner",    "id","nerjoiner")
+				.select ("id,brandset,productset,group,status")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
-		builder.setBolt("classifierJoiner", classifierJoiner)
-				.fieldsGrouping("GroupClassificationBolt", new Fields("id"))
-				.fieldsGrouping("StateClassificationBolt", new Fields("id"));*/
+		builder.setBolt("IEJoiner", IEJoiner)
+				.fieldsGrouping("nerjoiner", new Fields("id"))
+				.fieldsGrouping("classifierJoiner", new Fields("id"));
 
-		builder.setBolt("printer", new PrinterBolt() ).shuffleGrouping("nerjoiner");
+		JoinBolt fainalJoiner = new JoinBolt("IEJoiner", "id")
+				.join("TwitterSpout",    "id","IEJoiner")
+				.select ("id,brandset,productset,group,status,tweet")
+				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
+		builder.setBolt("fainalJoiner", fainalJoiner)
+				.fieldsGrouping("IEJoiner", new Fields("id"))
+				.fieldsGrouping("TwitterSpout", new Fields("id"));
+
+		builder.setBolt("printer", new PrinterBolt() ).shuffleGrouping("fainalJoiner");
 
 		// set the bolt class
 		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
@@ -63,7 +71,7 @@ public class SampleStormTopology {
 		cluster.submitTopology("SampleStormTopology", conf,
 				builder.createTopology());
 		try {
-			Thread.sleep(1000000);
+			Thread.sleep(100000);
 		} catch (Exception exception) {
 			System.out.println("Thread interrupted exception : " + exception);
 		}
