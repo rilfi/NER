@@ -20,8 +20,8 @@ public class SampleStormTopology {
 		builder.setSpout("TwitterSpout", new TwitterSpout("/root/ptweets.txt"), 1);
 		builder.setBolt("brandNERBolt",new BrandNERBolt("/root/brand_crf.model"),4).shuffleGrouping("TwitterSpout");
 		builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),4).shuffleGrouping("TwitterSpout");
-		builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("root/group.model.LogReg"),4).shuffleGrouping("TwitterSpout");
-		builder.setBolt("StateClassificationBolt",new GroupClassificationBolt("root/status.model.LogReg"),4).shuffleGrouping("TwitterSpout");
+		builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("/root/group.model.LogReg"),4).shuffleGrouping("TwitterSpout");
+		builder.setBolt("StateClassificationBolt",new GroupClassificationBolt("/root/status.model.LogReg"),4).shuffleGrouping("TwitterSpout");
 
 
 
