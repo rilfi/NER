@@ -80,11 +80,11 @@ public final class GroupClassificationBolt extends BaseRichBolt {
 		String group=classification.bestCategory();
 
 
+
 		if (!group.isEmpty()) {
 			collector.emit( new Values(id,group));
 
 		}
-
 
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
