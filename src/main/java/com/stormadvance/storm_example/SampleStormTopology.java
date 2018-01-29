@@ -49,17 +49,17 @@ public class SampleStormTopology {
 				.fieldsGrouping("nerjoiner", new Fields("id"))
 				.fieldsGrouping("classifierJoiner", new Fields("id"));
 
-		JoinBolt fainalJoiner = new JoinBolt("IEJoiner", "id")
+		/*JoinBolt fainalJoiner = new JoinBolt("IEJoiner", "id")
 				.join("TwitterSpout",    "id","IEJoiner")
 				.select ("id,brandset,productset,group,status,tweet")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("fainalJoiner", fainalJoiner)
 				.fieldsGrouping("IEJoiner", new Fields("id"))
-				.fieldsGrouping("TwitterSpout", new Fields("id"));
+				.fieldsGrouping("TwitterSpout", new Fields("id"));*/
 		//builder.setBolt("twitterBolt",new TwitterBolt(),1).shuffleGrouping("fainalJoiner");
 
 
-		builder.setBolt("printer", new PrinterBolt(),1 ).shuffleGrouping("fainalJoiner");
+		builder.setBolt("printer", new PrinterBolt(),1 ).shuffleGrouping("IEJoiner");
 
 		// set the bolt class
 		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
@@ -73,7 +73,7 @@ public class SampleStormTopology {
 		cluster.submitTopology("SampleStormTopology", conf,
 				builder.createTopology());
 		try {
-			Thread.sleep(1000000);
+			Thread.sleep(10000);
 		} catch (Exception exception) {
 			System.out.println("Thread interrupted exception : " + exception);
 		}
