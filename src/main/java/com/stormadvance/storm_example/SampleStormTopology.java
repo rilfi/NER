@@ -49,12 +49,12 @@ public class SampleStormTopology {
 				.fieldsGrouping("nerjoiner", new Fields("id"))
 				.fieldsGrouping("classifierJoiner", new Fields("id"));*/
 
-		JoinBolt fainalJoiner = new JoinBolt("GroupClassificationBolt", "id")
-				.join("TwitterSpout",    "id","GroupClassificationBolt")
+		JoinBolt fainalJoiner = new JoinBolt("classifierJoiner", "id")
+				.join("TwitterSpout",    "id","classifierJoiner")
 				.select ("id,group,status,tweet")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("fainalJoiner", fainalJoiner)
-				.fieldsGrouping("GroupClassificationBolt", new Fields("id"))
+				.fieldsGrouping("classifierJoiner", new Fields("id"))
 				.fieldsGrouping("TwitterSpout", new Fields("id"));
 		//builder.setBolt("twitterBolt",new TwitterBolt(),1).shuffleGrouping("fainalJoiner");
 
