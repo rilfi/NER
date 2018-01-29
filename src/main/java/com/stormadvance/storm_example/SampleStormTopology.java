@@ -25,13 +25,13 @@ public class SampleStormTopology {
 
 
 
-	/*	JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
+		JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
 				.join("productNERBolt",    "id","brandNERBolt")
 				.select ("id,brandset,productset")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("nerjoiner", nerJoiner)
 				.fieldsGrouping("brandNERBolt", new Fields("id"))
-				.fieldsGrouping("productNERBolt", new Fields("id"));*/
+				.fieldsGrouping("productNERBolt", new Fields("id"));
 
 		/*JoinBolt classifierJoiner = new JoinBolt("GroupClassificationBolt", "id")
 				.join("StateClassificationBolt",    "id","GroupClassificationBolt")
@@ -49,12 +49,12 @@ public class SampleStormTopology {
 				.fieldsGrouping("nerjoiner", new Fields("id"))
 				.fieldsGrouping("classifierJoiner", new Fields("id"));*/
 
-		JoinBolt fainalJoiner = new JoinBolt("brandNERBolt", "id")
-				.join("TwitterSpout",    "id","brandNERBolt")
-				.select ("id,brandset,tweet")
+		JoinBolt fainalJoiner = new JoinBolt("nerjoiner", "id")
+				.join("TwitterSpout",    "id","nerjoiner")
+				.select ("id,brandset,productset,tweet")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("fainalJoiner", fainalJoiner)
-				.fieldsGrouping("brandNERBolt", new Fields("id"))
+				.fieldsGrouping("nerjoiner", new Fields("id"))
 				.fieldsGrouping("TwitterSpout", new Fields("id"));
 		//builder.setBolt("twitterBolt",new TwitterBolt(),1).shuffleGrouping("fainalJoiner");
 
