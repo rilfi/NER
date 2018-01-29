@@ -49,17 +49,17 @@ public class SampleStormTopology {
 				.fieldsGrouping("nerjoiner", new Fields("id"))
 				.fieldsGrouping("classifierJoiner", new Fields("id"));
 
-		/*JoinBolt fainalJoiner = new JoinBolt("classifierJoiner", "id")
-				.join("TwitterSpout",    "id","classifierJoiner")
-				.select ("id,group,status,tweet")
+		JoinBolt fainalJoiner = new JoinBolt("IEJoiner", "id")
+				.join("TwitterSpout",    "id","IEJoiner")
+				.select ("id,brandset,productset,group,status,tweet")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("fainalJoiner", fainalJoiner)
-				.fieldsGrouping("classifierJoiner", new Fields("id"))
-				.fieldsGrouping("TwitterSpout", new Fields("id"));*/
+				.fieldsGrouping("IEJoiner", new Fields("id"))
+				.fieldsGrouping("TwitterSpout", new Fields("id"));
 		//builder.setBolt("twitterBolt",new TwitterBolt(),1).shuffleGrouping("fainalJoiner");
 
 
-		builder.setBolt("printer", new PrinterBolt(),1 ).shuffleGrouping("IEJoiner");
+		builder.setBolt("printer", new PrinterBolt(),1 ).shuffleGrouping("fainalJoiner");
 
 		// set the bolt class
 		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
