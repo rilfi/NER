@@ -28,7 +28,7 @@ public class SampleStormTopology {
 		JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
 				.join("productNERBolt",    "id","brandNERBolt")
 				.select ("id,brandset,productset")
-				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
+				.withTumblingWindow( new BaseWindowedBolt.Duration(1, TimeUnit.SECONDS) );
 		builder.setBolt("nerjoiner", nerJoiner)
 				.fieldsGrouping("brandNERBolt", new Fields("id"))
 				.fieldsGrouping("productNERBolt", new Fields("id"));
@@ -36,7 +36,7 @@ public class SampleStormTopology {
 		JoinBolt classifierJoiner = new JoinBolt("GroupClassificationBolt", "id")
 				.join("StateClassificationBolt",    "id","GroupClassificationBolt")
 				.select ("id,group,status")
-				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
+				.withTumblingWindow( new BaseWindowedBolt.Duration(1, TimeUnit.SECONDS) );
 		builder.setBolt("classifierJoiner", classifierJoiner)
 				.fieldsGrouping("GroupClassificationBolt", new Fields("id"))
 				.fieldsGrouping("StateClassificationBolt", new Fields("id"));
@@ -44,7 +44,7 @@ public class SampleStormTopology {
 		JoinBolt IEJoiner = new JoinBolt("nerjoiner", "id")
 				.join("classifierJoiner",    "id","nerjoiner")
 				.select ("id,brandset,productset,group,status")
-				.withTumblingWindow( new BaseWindowedBolt.Duration(100, TimeUnit.SECONDS) );
+				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("IEJoiner", IEJoiner)
 				.fieldsGrouping("nerjoiner", new Fields("id"))
 				.fieldsGrouping("classifierJoiner", new Fields("id"));
@@ -52,7 +52,7 @@ public class SampleStormTopology {
 		JoinBolt fainalJoiner = new JoinBolt("IEJoiner", "id")
 				.join("TwitterSpout",    "id","IEJoiner")
 				.select ("id,brandset,productset,group,status,tweet")
-				.withTumblingWindow( new BaseWindowedBolt.Duration(100, TimeUnit.SECONDS) );
+				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("fainalJoiner", fainalJoiner)
 				.fieldsGrouping("IEJoiner", new Fields("id"))
 				.fieldsGrouping("TwitterSpout", new Fields("id"));
