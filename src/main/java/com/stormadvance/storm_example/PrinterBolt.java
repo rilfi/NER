@@ -28,6 +28,10 @@ public class PrinterBolt extends BaseBasicBolt {
   @Override
   public void execute(Tuple tuple, BasicOutputCollector collector) {
     System.out.println(tuple.getFields());
+    for (int i=1;i<10;i++){
+      System.out.println("------------------------------------------");
+    }
+
     for(String s:tuple.getFields()){
       System.out.println(s+"---"+tuple.getValueByField(s));
     }
