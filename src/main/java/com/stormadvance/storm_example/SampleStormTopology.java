@@ -25,21 +25,21 @@ public class SampleStormTopology {
 
 
 
-		JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
+	/*	JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
 				.join("productNERBolt",    "id","brandNERBolt")
 				.select ("id,brandset,productset")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("nerjoiner", nerJoiner)
 				.fieldsGrouping("brandNERBolt", new Fields("id"))
-				.fieldsGrouping("productNERBolt", new Fields("id"));
+				.fieldsGrouping("productNERBolt", new Fields("id"));*/
 
-		JoinBolt classifierJoiner = new JoinBolt("GroupClassificationBolt", "id")
+		/*JoinBolt classifierJoiner = new JoinBolt("GroupClassificationBolt", "id")
 				.join("StateClassificationBolt",    "id","GroupClassificationBolt")
 				.select ("id,group,status")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("classifierJoiner", classifierJoiner)
 				.fieldsGrouping("GroupClassificationBolt", new Fields("id"))
-				.fieldsGrouping("StateClassificationBolt", new Fields("id"));
+				.fieldsGrouping("StateClassificationBolt", new Fields("id"));*/
 
 		/*JoinBolt IEJoiner = new JoinBolt("nerjoiner", "id")
 				.join("classifierJoiner",    "id","nerjoiner")
@@ -49,12 +49,12 @@ public class SampleStormTopology {
 				.fieldsGrouping("nerjoiner", new Fields("id"))
 				.fieldsGrouping("classifierJoiner", new Fields("id"));*/
 
-		JoinBolt fainalJoiner = new JoinBolt("classifierJoiner", "id")
-				.join("TwitterSpout",    "id","classifierJoiner")
-				.select ("id,group,status,tweet")
+		JoinBolt fainalJoiner = new JoinBolt("brandNERBolt", "id")
+				.join("TwitterSpout",    "id","brandNERBolt")
+				.select ("id,brandset,tweet")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("fainalJoiner", fainalJoiner)
-				.fieldsGrouping("classifierJoiner", new Fields("id"))
+				.fieldsGrouping("brandNERBolt", new Fields("id"))
 				.fieldsGrouping("TwitterSpout", new Fields("id"));
 		//builder.setBolt("twitterBolt",new TwitterBolt(),1).shuffleGrouping("fainalJoiner");
 
