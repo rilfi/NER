@@ -59,7 +59,7 @@ public class SampleStormTopology {
 		//builder.setBolt("twitterBolt",new TwitterBolt(),1).shuffleGrouping("fainalJoiner");
 
 
-		builder.setBolt("printer", new PrinterBolt(),1 ).shuffleGrouping("fainalJoiner");
+		builder.setBolt("printer", new PrinterBolt(),1 ).shuffleGrouping("classifierJoiner");
 
 		// set the bolt class
 		/*builder.setBolt("SampleBolt", new SampleBolt(), 4).shuffleGrouping(
