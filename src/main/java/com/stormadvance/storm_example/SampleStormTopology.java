@@ -73,7 +73,7 @@ public class SampleStormTopology {
 		cluster.submitTopology("SampleStormTopology", conf,
 				builder.createTopology());
 		try {
-			Thread.sleep(100000);
+			Thread.sleep(1000000);
 		} catch (Exception exception) {
 			System.out.println("Thread interrupted exception : " + exception);
 		}
