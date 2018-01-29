@@ -27,7 +27,7 @@ public class SampleStormTopology {
 
 		JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
 				.join("productNERBolt",    "id","brandNERBolt")
-				.select ("id,brandset,productset")
+				.select ("id,tweet,brandset,productset")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(1, TimeUnit.SECONDS) );
 		builder.setBolt("nerjoiner", nerJoiner)
 				.fieldsGrouping("brandNERBolt", new Fields("id"))
@@ -43,7 +43,7 @@ public class SampleStormTopology {
 
 		JoinBolt IEJoiner = new JoinBolt("nerjoiner", "id")
 				.join("classifierJoiner",    "id","nerjoiner")
-				.select ("id,brandset,productset,group,status")
+				.select ("id,tweet,brandset,productset,group,status")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
 		builder.setBolt("IEJoiner", IEJoiner)
 				.fieldsGrouping("nerjoiner", new Fields("id"))

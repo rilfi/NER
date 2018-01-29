@@ -64,7 +64,7 @@ public final class BrandNERBolt extends BaseRichBolt {
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields("id","brandset"));
+		outputFieldsDeclarer.declare(new Fields("id","tweet","brandset"));
 	}
 
 	public final void execute(final Tuple input) {
@@ -85,7 +85,7 @@ public final class BrandNERBolt extends BaseRichBolt {
 			}
 		}
 		if (brandSet.size() > 0) {
-			collector.emit( new Values(id,brandSet));
+			collector.emit( new Values(id,row,brandSet));
 
 		}
 
