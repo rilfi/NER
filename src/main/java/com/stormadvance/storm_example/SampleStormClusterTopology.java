@@ -32,6 +32,8 @@ public class SampleStormClusterTopology {
 		builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),4).shuffleGrouping("TwitterSpout");
 		builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("/root/group.model.LogReg"),4).shuffleGrouping("TwitterSpout");
 		builder.setBolt("StateClassificationBolt",new StateClassificationBolt("/root/status.model.LogReg"),4).shuffleGrouping("TwitterSpout");
+		builder.setBolt("ModelRecognizerBolt",new ModelNERBolt(),4).shuffleGrouping("TwitterSpout");
+
 
 
 
@@ -58,6 +60,14 @@ public class SampleStormClusterTopology {
 		builder.setBolt("IEJoiner", IEJoiner)
 				.fieldsGrouping("nerjoiner", new Fields("id"))
 				.fieldsGrouping("classifierJoiner", new Fields("id"));
+
+		JoinBolt finalJoiner = new JoinBolt("IEJoiner", "id")
+				.join("ModelRecognizerBolt",    "id","IEJoiner")
+				.select ("id,tweet,brandset,productset,group,status,modelset")
+				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
+		builder.setBolt("finalJoiner", IEJoiner)
+				.fieldsGrouping("IEJoiner", new Fields("id"))
+				.fieldsGrouping("ModelRecognizerBolt", new Fields("id"));
 		Config conf = new Config();
 		conf.setNumWorkers(4);
 
