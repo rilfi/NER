@@ -71,6 +71,11 @@ public final class ModelNERBolt extends BaseRichBolt {
 		if(modelSet.size()>0){
 			collector.emit( new Values(id,modelSet));
 		}
+		else {
+			modelSet.add("nomodel");
+			collector.emit( new Values(id,modelSet));
+
+		}
 
 			/*while ((line = br.readLine()) != null) {
 				*//*String[] tabSplit = line.split(",");
