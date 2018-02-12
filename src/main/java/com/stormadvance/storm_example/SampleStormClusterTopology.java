@@ -65,7 +65,7 @@ public class SampleStormClusterTopology {
 				.join("ModelRecognizerBolt",    "id","IEJoiner")
 				.select ("id,tweet,brandset,productset,group,status,modelset")
 				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
-		builder.setBolt("finalJoiner", IEJoiner)
+		builder.setBolt("finalJoiner", finalJoiner)
 				.fieldsGrouping("IEJoiner", new Fields("id"))
 				.fieldsGrouping("ModelRecognizerBolt", new Fields("id"));
 		Config conf = new Config();
