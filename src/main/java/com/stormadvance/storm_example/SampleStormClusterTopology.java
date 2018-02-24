@@ -28,11 +28,11 @@ public class SampleStormClusterTopology {
 				"SampleBolt");*/
 
 		builder.setSpout("TwitterSpout", new TwitterSpout("/root/ptweets.txt"), 1);
-		builder.setBolt("brandNERBolt",new BrandNERBolt("/root/brand_crf.model"),4).shuffleGrouping("TwitterSpout");
-		builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),4).shuffleGrouping("TwitterSpout");
-		builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("/root/group.model.LogReg"),4).shuffleGrouping("TwitterSpout");
-		builder.setBolt("StateClassificationBolt",new StateClassificationBolt("/root/status.model.LogReg"),4).shuffleGrouping("TwitterSpout");
-		builder.setBolt("ModelRecognizerBolt",new ModelNERBolt(),4).shuffleGrouping("TwitterSpout");
+		builder.setBolt("brandNERBolt",new BrandNERBolt("/root/brand_crf.model"),6).setNumTasks(2).shuffleGrouping("TwitterSpout");
+		builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
+		builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("/root/group.model.LogReg"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
+		builder.setBolt("StateClassificationBolt",new StateClassificationBolt("/root/status.model.LogReg"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
+		builder.setBolt("ModelRecognizerBolt",new ModelNERBolt(),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
 
 
 
@@ -69,7 +69,7 @@ public class SampleStormClusterTopology {
 				.fieldsGrouping("IEJoiner", new Fields("id"))
 				.fieldsGrouping("ModelRecognizerBolt", new Fields("id"));
 		Config conf = new Config();
-		conf.setNumWorkers(4);
+		conf.setNumWorkers(12);
 
 		// This statement submit the topology on remote
 		// args[0] = name of topology
