@@ -4,7 +4,6 @@ import com.aliasi.crf.ChainCrfFeatureExtractor;
 import com.aliasi.crf.ChainCrfFeatures;
 
 import java.io.Serializable;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
