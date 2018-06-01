@@ -33,7 +33,7 @@ public class SampleStormClusterTopology {
 		//builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("/root/group.model.LogReg"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
 		//builder.setBolt("StateClassificationBolt",new StateClassificationBolt("/root/status.model.LogReg"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
 		//builder.setBolt("ModelRecognizerBolt",new ModelNERBolt(),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
-		builder.setBolt("das",new RT_Das_rich_Bolt(),1).shuffleGrouping("brandNERBolt");
+		builder.setBolt("das",new RT_Das_rich_Bolt("/root/models/security/client-truststore.jks"),1).shuffleGrouping("brandNERBolt");
 
 
 

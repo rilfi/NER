@@ -14,6 +14,7 @@ import org.wso2.carbon.databridge.agent.exception.DataEndpointException;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.exception.TransportException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,17 +31,24 @@ public class RT_Das_rich_Bolt extends BaseRichBolt {
     String username;
     String password;
     String streamId;
-    String streamId1;
-    String sampleNumber;
+    private String path;
+    //String streamId1;
+    //String sampleNumber;
     OutputCollector _collector;
     int delay;
+     RT_Das_rich_Bolt(String p){
+         this.path=p;
+
+     }
 
     @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
                 _collector = outputCollector;
 
         AgentHolder. setConfigPath ("/root/models/conf.xml");
-        DataPublisherUtil.setTrustStoreParams();
+       // DataPublisherUtil.setTrustStoreParams();
+        System.setProperty("javax.net.ssl.trustStore",  path);
+        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         //dataPublisher =  new  DataPublisher(url, username, password);
         protocol = "thrift";
         host = "192.248.8.248";
@@ -50,8 +58,8 @@ public class RT_Das_rich_Bolt extends BaseRichBolt {
         streamId = "model:1.0.0";
        //streamId = "justfortest:1.0.0";
 
-        streamId1 = "RelatedStream:1.0.0";
-        sampleNumber = "0007";
+       // streamId1 = "RelatedStream:1.0.0";
+        //sampleNumber = "0007";
         try {
             dataPublisher = new DataPublisher(protocol, "tcp://" + host + ":" + port, null, username, password);
         } catch (DataEndpointAgentConfigurationException e) {
