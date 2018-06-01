@@ -70,7 +70,7 @@ public class SampleStormClusterTopology {
 //				.fieldsGrouping("IEJoiner", new Fields("id"))
 //				.fieldsGrouping("ModelRecognizerBolt", new Fields("id"));
 		Config conf = new Config();
-		conf.setNumWorkers(12);
+		conf.setNumWorkers(3);
 
 		// This statement submit the topology on remote
 		// args[0] = name of topology
