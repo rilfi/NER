@@ -73,6 +73,10 @@ public class RT_Das_rich_Bolt extends BaseRichBolt {
         } catch (TransportException e) {
             e.printStackTrace();
         }
+        Object payloadDataArray[]={1,"tweet","brandSet"};
+        Event event = new Event(streamId, System.currentTimeMillis(), null, null, payloadDataArray);
+        dataPublisher.publish(event);
+
 
     }
 
