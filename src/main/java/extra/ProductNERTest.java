@@ -1,4 +1,4 @@
-package com.stormadvance.storm_example;
+package extra;
 
 import com.aliasi.chunk.Chunk;
 import com.aliasi.chunk.Chunking;

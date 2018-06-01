@@ -29,48 +29,51 @@ public class SampleStormClusterTopology {
 
 		builder.setSpout("TwitterSpout", new TwitterSpout("/root/ptweets.txt"), 1);
 		builder.setBolt("brandNERBolt",new BrandNERBolt("/root/brand_crf.model"),6).setNumTasks(2).shuffleGrouping("TwitterSpout");
-		//builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
-		//builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("/root/group.model.LogReg"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
-		//builder.setBolt("StateClassificationBolt",new StateClassificationBolt("/root/status.model.LogReg"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
-		//builder.setBolt("ModelRecognizerBolt",new ModelNERBolt(),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
-		builder.setBolt("das",new RT_Das_rich_Bolt("/root/models/security/client-truststore.jks"),1).shuffleGrouping("brandNERBolt");
+		builder.setBolt("productNERBolt",new ProductNERBolt("/root/product_crf.model"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
+		builder.setBolt("GroupClassificationBolt",new GroupClassificationBolt("/root/group.model.LogReg"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
+		builder.setBolt("StateClassificationBolt",new StateClassificationBolt("/root/status.model.LogReg"),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
+		builder.setBolt("ModelRecognizerBolt",new ModelNERBolt(),5).setNumTasks(2).shuffleGrouping("TwitterSpout");
 
 
 
 
-//		JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
-//				.join("productNERBolt",    "id","brandNERBolt")
-//				.select ("id,tweet,brandset,productset")
-//				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
-//		builder.setBolt("nerjoiner", nerJoiner)
-//				.fieldsGrouping("brandNERBolt", new Fields("id"))
-//				.fieldsGrouping("productNERBolt", new Fields("id"));
-//
-//		JoinBolt classifierJoiner = new JoinBolt("GroupClassificationBolt", "id")
-//				.join("StateClassificationBolt",    "id","GroupClassificationBolt")
-//				.select ("id,group,status")
-//				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
-//		builder.setBolt("classifierJoiner", classifierJoiner)
-//				.fieldsGrouping("GroupClassificationBolt", new Fields("id"))
-//				.fieldsGrouping("StateClassificationBolt", new Fields("id"));
-//
-//		JoinBolt IEJoiner = new JoinBolt("nerjoiner", "id")
-//				.join("classifierJoiner",    "id","nerjoiner")
-//				.select ("id,tweet,brandset,productset,group,status")
-//				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
-//		builder.setBolt("IEJoiner", IEJoiner)
-//				.fieldsGrouping("nerjoiner", new Fields("id"))
-//				.fieldsGrouping("classifierJoiner", new Fields("id"));
-//
-//		JoinBolt finalJoiner = new JoinBolt("IEJoiner", "id")
-//				.join("ModelRecognizerBolt",    "id","IEJoiner")
-//				.select ("id,tweet,brandset,productset,group,status,modelset")
-//				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
-//		builder.setBolt("finalJoiner", finalJoiner)
-//				.fieldsGrouping("IEJoiner", new Fields("id"))
-//				.fieldsGrouping("ModelRecognizerBolt", new Fields("id"));
+		JoinBolt nerJoiner = new JoinBolt("brandNERBolt", "id")
+				.join("productNERBolt",    "id","brandNERBolt")
+				.select ("id,tweet,brandset,productset")
+				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
+		builder.setBolt("nerjoiner", nerJoiner)
+				.fieldsGrouping("brandNERBolt", new Fields("id"))
+				.fieldsGrouping("productNERBolt", new Fields("id"));
+
+		JoinBolt classifierJoiner = new JoinBolt("GroupClassificationBolt", "id")
+				.join("StateClassificationBolt",    "id","GroupClassificationBolt")
+				.select ("id,group,status")
+				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
+		builder.setBolt("classifierJoiner", classifierJoiner)
+				.fieldsGrouping("GroupClassificationBolt", new Fields("id"))
+				.fieldsGrouping("StateClassificationBolt", new Fields("id"));
+
+		JoinBolt IEJoiner = new JoinBolt("nerjoiner", "id")
+				.join("classifierJoiner",    "id","nerjoiner")
+				.select ("id,tweet,brandset,productset,group,status")
+				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
+		builder.setBolt("IEJoiner", IEJoiner)
+				.fieldsGrouping("nerjoiner", new Fields("id"))
+				.fieldsGrouping("classifierJoiner", new Fields("id"));
+
+		JoinBolt finalJoiner = new JoinBolt("IEJoiner", "id")
+				.join("ModelRecognizerBolt",    "id","IEJoiner")
+				.select ("id,tweet,brandset,productset,group,status,modelset")
+				.withTumblingWindow( new BaseWindowedBolt.Duration(10, TimeUnit.SECONDS) );
+		builder.setBolt("finalJoiner", finalJoiner)
+				.fieldsGrouping("IEJoiner", new Fields("id"))
+				.fieldsGrouping("ModelRecognizerBolt", new Fields("id"));
+		//builder.setBolt("das",new RT_Das_rich_Bolt("/root/models/security/client-truststore.jks"),1).shuffleGrouping("finalJoiner");
+		builder.setBolt("gettingfromfinaljoint",new GettingFromFinalJoin(),1).shuffleGrouping("finalJoiner");
+
+
 		Config conf = new Config();
-		conf.setNumWorkers(3);
+		conf.setNumWorkers(8);
 
 		// This statement submit the topology on remote
 		// args[0] = name of topology

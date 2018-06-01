@@ -1,4 +1,4 @@
-package com.stormadvance.storm_example;
+package extra;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;

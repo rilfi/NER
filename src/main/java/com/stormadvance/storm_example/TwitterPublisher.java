@@ -1,5 +1,6 @@
 package com.stormadvance.storm_example;
 
+import extra.MySQLDump;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.IBasicBolt;

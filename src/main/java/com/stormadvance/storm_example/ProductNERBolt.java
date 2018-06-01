@@ -37,14 +37,19 @@ public final class ProductNERBolt extends BaseRichBolt {
 	//BufferedReader br;
 	File modelFile ;
 	ChainCrfChunker crfChunker;
+	private long initiatatedTime;
+	private long threadid;
+	private long count;
 	public ProductNERBolt(String path) {
 		this.path = path;
 	}
-	private Map<String, Integer> afinnSentimentMap = new HashMap<String, Integer>();
 
 	public final void prepare(final Map map,
 			final TopologyContext topologyContext,
 			final OutputCollector collector) {
+		initiatatedTime = System.nanoTime() - (24 * 60 * 60 * 1000 * 1000 * 1000);
+		threadid=Thread.currentThread().getId();
+		count = 1;
 		this.collector = collector;
 		// Bolt will read the AFINN Sentiment file [which is in the classpath]
 		// and stores the key, value pairs to a Map.
@@ -65,10 +70,11 @@ public final class ProductNERBolt extends BaseRichBolt {
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields("id","productset"));
+		outputFieldsDeclarer.declare(new Fields("id","productset","TID_PRODUCT","TT_PRODUCT","AV_PRODUCT","CNT_PRODUCT"));
 	}
 
 	public final void execute(final Tuple input) {
+		long beforeProcessTS = System.nanoTime() - (24 * 60 * 60 * 1000 * 1000 * 1000);
 		String row=input.getStringByField("tweet");
 		int id=input.getIntegerByField("id");
 
@@ -85,9 +91,12 @@ public final class ProductNERBolt extends BaseRichBolt {
 				catSet.add(chuntText.toLowerCase());
 			}
 		}
-
+		Long afterProcessTS = System.nanoTime() - (24 * 60 * 60 * 1000 * 1000 * 1000);
+		long averageTS = (afterProcessTS - initiatatedTime) / count;
+		count++;
+		long timeTaken = afterProcessTS - beforeProcessTS;
 		if (catSet.size() > 0) {
-			collector.emit( new Values(id,catSet));
+			collector.emit( new Values(id,catSet,threadid,timeTaken,averageTS,count));
 		}
 
 

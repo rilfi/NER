@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package com.stormadvance.storm_example;
+package extra;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

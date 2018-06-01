@@ -39,6 +39,9 @@ public final class StateClassificationBolt extends BaseRichBolt {
 	//BufferedReader br;
 	File modelFile ;
 	LogisticRegressionClassifier<CharSequence> classifier;
+	private long initiatatedTime;
+	private long threadid;
+	private long count;
 	public StateClassificationBolt(String path) {
 		this.path = path;
 	}
@@ -46,6 +49,9 @@ public final class StateClassificationBolt extends BaseRichBolt {
 	public final void prepare(final Map map,
 			final TopologyContext topologyContext,
 			final OutputCollector collector) {
+		initiatatedTime = System.nanoTime() - (24 * 60 * 60 * 1000 * 1000 * 1000);
+		threadid=Thread.currentThread().getId();
+		count = 1;
 		this.collector = collector;
 		// Bolt will read the AFINN Sentiment file [which is in the classpath]
 		// and stores the key, value pairs to a Map.
@@ -66,10 +72,12 @@ public final class StateClassificationBolt extends BaseRichBolt {
 
 	public final void declareOutputFields(
 			final OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declare(new Fields("id","status"));
+		outputFieldsDeclarer.declare(new Fields("id","status","TID_STA","TT_STA","AV_STA","CNT_STA"));
 	}
 
 	public final void execute(final Tuple input) {
+		long beforeProcessTS = System.nanoTime() - (24 * 60 * 60 * 1000 * 1000 * 1000);
+
 		String row=input.getStringByField("tweet");
 		int id=input.getIntegerByField("id");
 
@@ -78,8 +86,12 @@ public final class StateClassificationBolt extends BaseRichBolt {
 		Classification classification
 				= classifier.classify(row);
 		String state=classification.bestCategory();
+		Long afterProcessTS = System.nanoTime() - (24 * 60 * 60 * 1000 * 1000 * 1000);
+		long averageTS = (afterProcessTS - initiatatedTime) / count;
+		count++;
+		long timeTaken = afterProcessTS - beforeProcessTS;
 		if (state!=null) {
-			collector.emit( new Values(id,state));
+			collector.emit( new Values(id,state,threadid,timeTaken,averageTS,count));
 
 		}
 

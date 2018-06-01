@@ -1,5 +1,6 @@
-package com.stormadvance.storm_example;
+package extra;
 
+import com.stormadvance.storm_example.*;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.bolt.JoinBolt;
